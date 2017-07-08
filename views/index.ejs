@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>留言板</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>留言板</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">留言列表</div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>留言</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% datas.messages.forEach(function(el){ %>
+                        <tr>
+                            <td><%= el.username %></td>
+                            <td><%= el.message %></td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs modify">修改</button>
+                                <button type="button" class="btn btn-danger btn-xs delete">删除</button>
+                            </td>
+                        </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation" class="text-center">
+                        <ul class="pagination ">
+                            <% if(datas.page <= 0){ %>
+                            <li class="disabled">
+                                <a href="javascript:void(0)" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <% }else{ %>
+                            <li>
+                                <a href="<%= '?page=' + (parseInt(datas.page) - 1) %>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <% } %>
+                            <% for(var i = 0;i < Math.ceil(datas.count / 10);i++){ %>
+                            <li
+                                    <% if(i == datas.page){ %>
+                                    class="active"
+                                    <% } %>
+                            >
+                                <a href="?page=<%= i %>"><%= i + 1 %></a>
+                            </li>
+                            <% } %>
+                            <% if(datas.page >= Math.ceil(datas.count / 10) - 1){ %>
+                            <li href="javascript:void(0)" class="disabled">
+                                <a aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <% }else{ %>
+                            <li>
+                                <a href="<%= '?page=' + (parseInt(datas.page) + 1) %>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">添加留言</div>
+                <div class="panel-body">
+                    <form id="message-form">
+                        <div class="form-group">
+                            <label for="userName">姓名：</label>
+                            <input type="text" class="form-control" id="userName" placeholder="姓名">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">留言</label>
+                            <textarea type="text" class="form-control" id="message"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-success" id="submitMessage">提交</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--添加数据模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="add-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">信息提示:</h4>
+                </div>
+                <div class="modal-body">
+                    <p>One fine body&hellip;</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal" id="sure">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!--删除数据模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="delete-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">信息提示:</h4>
+                </div>
+                <div class="modal-body">
+                    <p>是否删除“<b id="userMessage"></b>”的留言？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger removeMessageBtn">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!--修改数据模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="update-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">修改留言</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="userNameupdate">姓名：</label>
+                            <input type="text" class="form-control" id="userNameupdate" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="messageupdate">留言：</label>
+                            <input type="text" class="form-control" id="messageupdate" placeholder="Password">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="updateMessageBtn">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    $("#submitMessage").click(function () {
+        $.post("/add", {
+            "username": $("#userName").val(),
+            "message": $("#message").val()
+        }, function (result) {
+            $("#add-modal").modal('show').find(".modal-body").html(result);
+            $("#sure").click(function () {
+                location.reload();
+            });
+        });
+    })
+    $(".delete").click(function () {
+        var username = $(this).parent().siblings().first().html()
+        $("#delete-modal").modal('show').find("#userMessage").html(username);
+    });
+
+    $(".removeMessageBtn").click(function () {
+        var removeData = {
+            "username": $("#userMessage").html()
+        }
+        $.post("/remove", removeData, function (result) {
+            $(".removeMessageBtn").html(result).attr("class", "btn btn-success")
+            setTimeout(function () {
+                $("#delete-modal").modal('hide');
+            }, 1000)
+            setTimeout(function () {
+                location.reload();
+            }, 1300)
+
+        });
+    });
+    var oldusername = '';
+    $(".modify").click(function () {
+        var name = $(this).parent().prev().prev().html();
+        var message = $(this).parent().prev().html();
+        $("#update-modal").modal('show');
+        $("#userNameupdate").val(name);
+        $("#messageupdate").val(message);
+        oldusername = name;
+    });
+    $("#updateMessageBtn").click(function(){
+        var name = $("#userNameupdate").val();
+        var message = $("#messageupdate").val();
+        $.post('/update',{'oldname':oldusername,'newusername':name,'newmessage':message},function(result){
+            $("#updateMessageBtn").html(result).attr("class", "btn btn-success");
+            setTimeout(function () {
+                $("#update-modal").modal('hide');
+            }, 1000)
+            setTimeout(function () {
+                location.reload();
+            }, 1300)
+        });
+    });
+</script>
+</body>
+</html>
