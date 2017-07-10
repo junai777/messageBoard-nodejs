@@ -16,7 +16,7 @@
 1. git clone git@github.com:luoanyang/messageBoard-nodejs.git
 2. cd littleAblum-nodejs
 3. npm install
-4. node app.js
+4. node server.js
 5. 浏览器打开 localhost (端口为80)
 
 ### 4.项目演示
