@@ -11,8 +11,8 @@
 |__views          //视图  
 |__server.js         //入口文件  
 |__package.json   //依赖
- 
-### 3.项目运行  
+|__setting.json   //数据库的地址
+### 3.项目运行  
 1. git clone git@github.com:luoanyang/messageBoard-nodejs.git
 2. cd littleAblum-nodejs
 3. npm install
