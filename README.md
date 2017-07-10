@@ -10,11 +10,11 @@
 |__public         //静态资源  
 |__views          //视图  
 |__server.js         //入口文件  
-|__package.json   //依赖
-|__setting.json   //数据库的地址
+|__package.json   //依赖   
+|__setting.json    //数据库的地址
 ### 3.项目运行  
 1. git clone git@github.com:luoanyang/messageBoard-nodejs.git
-2. cd littleAblum-nodejs
+2. cd messageBoard-nodejs
 3. npm install
 4. node server.js
 5. 浏览器打开 localhost (端口为80)
