@@ -13,7 +13,7 @@
 |__package.json   //依赖
  
 ### 3.项目运行  
-1. git clone git@github.com:luoanyang/littleAblum-nodejs.git
+1. git clone git@github.com:luoanyang/messageBoard-nodejs.git
 2. cd littleAblum-nodejs
 3. npm install
 4. node app.js
